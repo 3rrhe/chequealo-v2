@@ -1,0 +1,58 @@
+create database chequealo;
+
+use chequealo;
+
+CREATE TABLE `schedule` (
+  `schedule_id` int,
+  `income` time,
+  `lunch_start` time,
+  `lunch_end` time,
+  `output` time,
+  PRIMARY KEY (`schedule_id`)
+);
+
+CREATE TABLE `users` (
+  `user_id` int,
+  `username` varchar(25),
+  `role` varchar(15),
+  `password` varchar(50),
+  `email` varchar(35),
+  `apikey` varchar(100),
+  `enabled` tinyint,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `deleted_at` datetime,
+  PRIMARY KEY (`user_id`)
+);
+
+CREATE TABLE `profile` (
+  `profile_id` int,
+  `first_name` varchar(255),
+  `last_name` varchar(255),
+  `address` varchar(255),
+  `job_position` varchar(255),
+  `schedule_id` int,
+  `user_id` int,
+  PRIMARY KEY (`profile_id`),
+  FOREIGN KEY (`schedule_id`) REFERENCES `schedule`(`schedule_id`),
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`)
+);
+
+CREATE TABLE `marking` (
+  `marking_id` int,
+  `profile_id` int,
+  `entry_at` datetime,
+  `departure_at` datetime,
+  `deleted_at` datetime,
+  PRIMARY KEY (`marking_id`),
+  FOREIGN KEY (`profile_id`) REFERENCES `profile`(`profile_id`)
+);
+
+CREATE TABLE `delay` (
+  `delay_id` int,
+  `created_at` datetime,
+  `marking_id` int,
+  `deleted_at` datetime,
+  PRIMARY KEY (`delay_id`),
+  FOREIGN KEY (`marking_id`) REFERENCES `marking`(`marking_id`)
+);

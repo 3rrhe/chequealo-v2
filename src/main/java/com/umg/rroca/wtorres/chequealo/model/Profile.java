@@ -25,6 +25,9 @@ public class Profile {
     @Column(name = "job_position", nullable = false)
     private String jobPosition;
 
+    @Column(name = "schedule_id", nullable = false)
+    private long scheduleId;
+
     @Column(name = "user_id", nullable = false)
     private long userId;
 
@@ -119,6 +122,24 @@ public class Profile {
     }
 
     /**
+     * Gets scheduleId.
+     *
+     * @return the scheduleId
+     */
+    public long getScheduleId() {
+        return scheduleId;
+    }
+
+    /**
+     * Sets scheduleId.
+     *
+     * @param scheduleId the scheduleId
+     */
+    public void setScheduleId(long scheduleId) {
+        this.scheduleId = scheduleId;
+    }
+
+    /**
      * Gets user id.
      *
      * @return the user id
@@ -144,7 +165,8 @@ public class Profile {
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
                 ", jobPosition='" + jobPosition + '\'' +
-                ", user_id='" + userId + '\'' +
+                ", scheduleId='" + scheduleId + '\'' +
+                ", userId='" + userId + '\'' +
                 '}';
     }
 }

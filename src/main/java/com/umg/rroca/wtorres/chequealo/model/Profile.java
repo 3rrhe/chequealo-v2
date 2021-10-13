@@ -3,6 +3,7 @@ package com.umg.rroca.wtorres.chequealo.model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "profile")
@@ -25,8 +26,16 @@ public class Profile {
     @Column(name = "job_position", nullable = false)
     private String jobPosition;
 
-    @Column(name = "user_id", nullable = false)
-    private long userId;
+    @ManyToOne
+    @JoinColumn(name = "schedule_id")
+    private Schedule schedule;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Transient
+    private List<Marking> markings;
 
     /**
      * Gets id.
@@ -119,21 +128,53 @@ public class Profile {
     }
 
     /**
-     * Gets user id.
+     * Gets schedule.
      *
-     * @return the user id
+     * @return the schedule
      */
-    public long getUserId() {
-        return userId;
+    public Schedule getSchedule() {
+        return schedule;
     }
 
     /**
-     * Sets user id.
+     * Sets schedule.
      *
-     * @param userId the user id
+     * @param schedule the schedule
      */
-    public void setUserId(long userId) {
-        this.userId = userId;
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    /**
+     * Gets user.
+     *
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * Sets user.
+     *
+     * @param user the user
+     */
+    public void setUserId(User user) {
+        this.user = user;
+    }
+
+    /**
+     * @return the list of markings
+     */
+    public List<Marking> getMarkings() {
+        return markings;
+    }
+
+    /**
+     * @param markings the list of markings
+     */
+    public void setMarkings(List<Marking> markings) {
+        this.markings = markings;
     }
 
     @Override
@@ -144,7 +185,8 @@ public class Profile {
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
                 ", jobPosition='" + jobPosition + '\'' +
-                ", user_id='" + userId + '\'' +
+                ", scheduleId='" + schedule.getId() + '\'' +
+                ", userId='" + user.getId() + '\'' +
                 '}';
     }
 }

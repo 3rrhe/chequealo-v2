@@ -3,7 +3,7 @@ package com.umg.rroca.wtorres.chequealo.model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "delay")
@@ -14,11 +14,12 @@ public class Delay {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long delayId;
 
-    @Column(name = "marking_id", nullable = false)
-    private long markingId;
+    @ManyToOne
+    @JoinColumn(name = "marking_id")
+    private Marking marking;
 
     @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
@@ -42,21 +43,21 @@ public class Delay {
     }
 
     /**
-     * Gets markingId.
+     * Gets marking.
      *
-     * @return the markingId
+     * @return the marking
      */
-    public long getMarkingId() {
-        return markingId;
+    public Marking getMarking() {
+        return marking;
     }
 
     /**
-     * Sets markingId.
+     * Sets marking.
      *
-     * @param markingId the markingId
+     * @param marking the marking
      */
-    public void setMarkingId(long markingId) {
-        this.markingId = markingId;
+    public void setMarking(Marking marking) {
+        this.marking = marking;
     }
 
     /**
@@ -99,7 +100,7 @@ public class Delay {
     public String toString() {
         return "Delay{" +
                 "id=" + delayId +
-                ", markingId='" + markingId + '\'' +
+                ", markingId='" + marking.getId() + '\'' +
                 ", createdAt='" + createdAt.toString() + '\'' +
                 ", deletedAt='" + deletedAt.toString() + '\'' +
                 '}';

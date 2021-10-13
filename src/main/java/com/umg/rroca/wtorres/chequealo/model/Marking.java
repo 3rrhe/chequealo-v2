@@ -3,7 +3,7 @@ package com.umg.rroca.wtorres.chequealo.model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "marking")
@@ -14,11 +14,12 @@ public class Marking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long markingId;
 
-    @Column(name = "profile_id", nullable = false)
-    private long profileId;
+    @ManyToOne
+    @JoinColumn(name = "profile_id")
+    private Profile profile;
 
     @Column(name = "entry_at", nullable = false)
-    private Date entryAt;
+    private Date entryAt = new Date();
 
     @Column(name = "departure_at", nullable = true)
     private Date departureAt;
@@ -45,21 +46,21 @@ public class Marking {
     }
 
     /**
-     * Gets profileId.
+     * Gets profile.
      *
-     * @return the profileId
+     * @return the profile
      */
-    public long getProfileId() {
-        return profileId;
+    public Profile getProfile() {
+        return profile;
     }
 
     /**
-     * Sets profileId.
+     * Sets profile.
      *
-     * @param profileId the profileId
+     * @param profile the profile
      */
-    public void setProfileId(long profileId) {
-        this.profileId = profileId;
+    public void setProfile(Profile profile) {
+        this.profile = profile;
     }
 
     /**
@@ -120,7 +121,7 @@ public class Marking {
     public String toString() {
         return "Marking{" +
                 "id=" + markingId +
-                ", profileId='" + profileId + '\'' +
+                ", profileId='" + profile.getId() + '\'' +
                 ", entryAt='" + entryAt.toString() + '\'' +
                 ", departureAt='" + departureAt.toString() + '\'' +
                 ", deletedAt='" + deletedAt.toString() + '\'' +

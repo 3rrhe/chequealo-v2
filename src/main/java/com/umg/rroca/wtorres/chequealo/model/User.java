@@ -3,7 +3,7 @@ package com.umg.rroca.wtorres.chequealo.model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "user")
@@ -34,10 +34,10 @@ public class User {
     private Boolean enabled;
 
     @Column(name = "created_at", nullable = false)
-    private Date createdAt;
+    private Date createdAt = new Date();
 
     @Column(name = "updated_at", nullable = false)
-    private Date updatedAt;
+    private Date updatedAt = new Date();
 
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;

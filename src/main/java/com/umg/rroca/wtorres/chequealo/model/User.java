@@ -1,5 +1,6 @@
 package com.umg.rroca.wtorres.chequealo.model;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -28,10 +29,10 @@ public class User {
     private String email;
 
     @Column(name = "apikey", nullable = false)
-    private String apikey;
+    private String apikey = RandomStringUtils.randomAlphanumeric(20).toUpperCase();
 
     @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    private Boolean enabled = true;
 
     @Column(name = "created_at", nullable = false)
     private Date createdAt = new Date();

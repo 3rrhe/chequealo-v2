@@ -10,7 +10,9 @@ import java.util.Date;
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-    private static final String ROLE_CLIENT = "ROLE_USER";
+    public static final String ROLE_CLIENT = "ROLE_USER";
+    public static final String ROLE_BOSS = "ROLE_BOSS";
+    public static final String ROLE_SECURITY = "ROLE_SECURITY";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

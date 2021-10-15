@@ -1,5 +1,8 @@
 package com.umg.rroca.wtorres.chequealo.utils;
 
+/**
+ * AuthUser class used to make login in API
+ */
 public class AuthUser {
     private String username;
     private String password;

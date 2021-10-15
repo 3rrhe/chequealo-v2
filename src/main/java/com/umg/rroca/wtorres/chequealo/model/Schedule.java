@@ -14,6 +14,9 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long scheduleId;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "income", nullable = false)
     private Date income;
 
@@ -23,7 +26,7 @@ public class Schedule {
     @Column(name = "lunch_end", nullable = false)
     private Date lunchEnd;
 
-    @Column(name = "job_position", nullable = false)
+    @Column(name = "output", nullable = false)
     private Date output;
 
     /**
@@ -42,6 +45,24 @@ public class Schedule {
      */
     public void setId(long id) {
         this.scheduleId = id;
+    }
+
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -120,6 +141,7 @@ public class Schedule {
     public String toString() {
         return "Schedule{" +
                 "id=" + scheduleId +
+                ", name='" + name + '\'' +
                 ", income='" + income.toString() + '\'' +
                 ", lunchStart='" + lunchStart.toString() + '\'' +
                 ", lunchEnd='" + lunchEnd.toString() + '\'' +

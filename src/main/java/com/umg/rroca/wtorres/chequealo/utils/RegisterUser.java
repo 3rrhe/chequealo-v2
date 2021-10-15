@@ -1,5 +1,8 @@
 package com.umg.rroca.wtorres.chequealo.utils;
 
+/**
+ * RegisterUser class used to register in API
+ */
 public class RegisterUser {
     private String username;
     private String password;

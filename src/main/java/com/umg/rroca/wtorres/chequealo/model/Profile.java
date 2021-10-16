@@ -9,6 +9,7 @@ import java.util.List;
 @Table(name = "profile")
 @EntityListeners(AuditingEntityListener.class)
 public class Profile {
+    private static final String JOB_OFFICE = "job_office";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,7 @@ public class Profile {
     private String address;
 
     @Column(name = "job_position", nullable = false)
-    private String jobPosition;
+    private String jobPosition = JOB_OFFICE;
 
     @ManyToOne
     @JoinColumn(name = "schedule_id")

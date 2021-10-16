@@ -1,23 +1,17 @@
 package com.umg.rroca.wtorres.chequealo.controller;
 
-import com.umg.rroca.wtorres.chequealo.exception.ResourceNotFoundException;
-import com.umg.rroca.wtorres.chequealo.model.Profile;
-import com.umg.rroca.wtorres.chequealo.model.Schedule;
-import com.umg.rroca.wtorres.chequealo.model.User;
-import com.umg.rroca.wtorres.chequealo.repository.ProfileRepository;
-import com.umg.rroca.wtorres.chequealo.repository.ScheduleRepository;
-import com.umg.rroca.wtorres.chequealo.repository.UserRepository;
-import com.umg.rroca.wtorres.chequealo.utils.ApiResponse;
-import com.umg.rroca.wtorres.chequealo.utils.RegisterUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.umg.rroca.wtorres.chequealo.model.Schedule;
+import com.umg.rroca.wtorres.chequealo.utils.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.umg.rroca.wtorres.chequealo.repository.ScheduleRepository;
+import com.umg.rroca.wtorres.chequealo.exception.ResourceNotFoundException;
 
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -107,7 +101,7 @@ public class ScheduleController {
             Schedule schedule =
                     scheduleRepository
                             .findById(scheduleId)
-                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + scheduleId));
+                            .orElseThrow(() -> new ResourceNotFoundException("Schedule not found on :: " + scheduleId));
 
             schedule.setName(scheduleDetails.getName());
             schedule.setIncome(scheduleDetails.getIncome());

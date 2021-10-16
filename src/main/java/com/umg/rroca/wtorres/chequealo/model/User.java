@@ -1,5 +1,6 @@
 package com.umg.rroca.wtorres.chequealo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -31,6 +32,7 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(name = "apikey", nullable = false)
     private String apikey = RandomStringUtils.randomAlphanumeric(20).toUpperCase();
 
@@ -40,9 +42,11 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private Date createdAt = new Date();
 
+    @JsonIgnore
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt = new Date();
 
+    @JsonIgnore
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
 

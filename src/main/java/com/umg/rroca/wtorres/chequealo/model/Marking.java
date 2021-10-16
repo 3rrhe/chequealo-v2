@@ -1,9 +1,11 @@
 package com.umg.rroca.wtorres.chequealo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "marking")
@@ -14,18 +16,23 @@ public class Marking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long markingId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "profile_id")
     private Profile profile;
 
     @Column(name = "entry_at", nullable = false)
-    private Date entryAt = new Date();
+    private Date entryAt;
 
     @Column(name = "departure_at", nullable = true)
     private Date departureAt;
 
+    @JsonIgnore
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
+
+    @Transient
+    private List<Delay> delays;
 
     /**
      * Gets id.
@@ -115,6 +122,20 @@ public class Marking {
      */
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    /**
+     * @return the list of delays
+     */
+    public List<Delay> getDelays() {
+        return delays;
+    }
+
+    /**
+     * @param delays the list of delays
+     */
+    public void setDelays(List<Delay> delays) {
+        this.delays = delays;
     }
 
     @Override

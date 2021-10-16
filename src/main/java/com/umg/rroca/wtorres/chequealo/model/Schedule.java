@@ -3,6 +3,7 @@ package com.umg.rroca.wtorres.chequealo.model;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.util.Date;
 
 @Entity
@@ -14,17 +15,20 @@ public class Schedule {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long scheduleId;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "income", nullable = false)
-    private Date income;
+    private Time income;
 
     @Column(name = "lunch_start", nullable = false)
-    private Date lunchStart;
+    private Time lunchStart;
 
     @Column(name = "lunch_end", nullable = false)
-    private Date lunchEnd;
+    private Time lunchEnd;
 
-    @Column(name = "job_position", nullable = false)
-    private Date output;
+    @Column(name = "output", nullable = false)
+    private Time output;
 
     /**
      * Gets id.
@@ -45,11 +49,29 @@ public class Schedule {
     }
 
     /**
+     * Gets name.
+     *
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets name.
+     *
+     * @param name the name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * Gets income.
      *
      * @return the income
      */
-    public Date getIncome() {
+    public Time getIncome() {
         return income;
     }
 
@@ -58,7 +80,7 @@ public class Schedule {
      *
      * @param income the income
      */
-    public void setIncome(Date income) {
+    public void setIncome(Time income) {
         this.income = income;
     }
 
@@ -67,7 +89,7 @@ public class Schedule {
      *
      * @return the last name
      */
-    public Date getLunchStart() {
+    public Time getLunchStart() {
         return lunchStart;
     }
 
@@ -76,7 +98,7 @@ public class Schedule {
      *
      * @param lunchStart the lunchStart
      */
-    public void setLunchStart(Date lunchStart) {
+    public void setLunchStart(Time lunchStart) {
         this.lunchStart = lunchStart;
     }
 
@@ -85,7 +107,7 @@ public class Schedule {
      *
      * @return the lunchEnd
      */
-    public Date getLunchEnd() {
+    public Time getLunchEnd() {
         return lunchEnd;
     }
 
@@ -94,7 +116,7 @@ public class Schedule {
      *
      * @param lunchEnd the lunchEnd
      */
-    public void setLunchEnd(Date lunchEnd) {
+    public void setLunchEnd(Time lunchEnd) {
         this.lunchEnd = lunchEnd;
     }
 
@@ -103,7 +125,7 @@ public class Schedule {
      *
      * @return the output
      */
-    public Date getOutput() {
+    public Time getOutput() {
         return output;
     }
 
@@ -112,7 +134,7 @@ public class Schedule {
      *
      * @param output the output
      */
-    public void setOutput(Date output) {
+    public void setOutput(Time output) {
         this.output = output;
     }
 
@@ -120,6 +142,7 @@ public class Schedule {
     public String toString() {
         return "Schedule{" +
                 "id=" + scheduleId +
+                ", name='" + name + '\'' +
                 ", income='" + income.toString() + '\'' +
                 ", lunchStart='" + lunchStart.toString() + '\'' +
                 ", lunchEnd='" + lunchEnd.toString() + '\'' +

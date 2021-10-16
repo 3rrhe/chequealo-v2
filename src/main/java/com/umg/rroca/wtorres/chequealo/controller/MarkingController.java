@@ -170,9 +170,10 @@ public class MarkingController {
      * @return the response entity
      * @throws ResourceNotFoundException the resource not found exception
      */
-    @PutMapping("/markings/{id}")
+    @PutMapping("/profiles/{id}/markings/{marking_id}")
     public ResponseEntity<ApiResponse> updateSchedule(
-            @PathVariable(value = "id") Long markingId)
+            @PathVariable(value = "id") Long profileId,
+            @PathVariable(value = "marking_id") Long markingId)
             throws ResourceNotFoundException {
         ApiResponse res;
 

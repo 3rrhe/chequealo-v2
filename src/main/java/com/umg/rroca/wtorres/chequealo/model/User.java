@@ -3,8 +3,9 @@ package com.umg.rroca.wtorres.chequealo.model;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
@@ -44,6 +45,9 @@ public class User {
 
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
+
+    @Transient
+    private List<Profile> profiles;
 
     /**
      * Gets id.
@@ -223,6 +227,20 @@ public class User {
      */
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    /**
+     * @return the list of profiles
+     */
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
+
+    /**
+     * @param profiles the list of profiles
+     */
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
     }
 
     @Override

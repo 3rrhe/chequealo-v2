@@ -1,17 +1,20 @@
 package com.umg.rroca.wtorres.chequealo.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.umg.rroca.wtorres.chequealo.model.User;
+import com.umg.rroca.wtorres.chequealo.model.Profile;
+import com.umg.rroca.wtorres.chequealo.utils.ApiResponse;
+import com.umg.rroca.wtorres.chequealo.utils.RegisterUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.umg.rroca.wtorres.chequealo.repository.UserRepository;
 import com.umg.rroca.wtorres.chequealo.repository.ProfileRepository;
 import com.umg.rroca.wtorres.chequealo.exception.ResourceNotFoundException;
 
-import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -29,8 +32,16 @@ public class UserController {
      * @return the list
      */
     @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<ApiResponse> getAllUsers() {
+        ApiResponse res;
+
+        try {
+            res = new ApiResponse(HttpStatus.OK.value(), "Profiles list", profileRepository.findAll());
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -41,28 +52,30 @@ public class UserController {
      * @throws ResourceNotFoundException the resource not found exception
      */
     @GetMapping("/users/{id}")
-    public ResponseEntity<User> getUsersById(@PathVariable(value = "id") Long userId)
+    public ResponseEntity<ApiResponse> getUsersById(@PathVariable(value = "id") Long userId)
             throws ResourceNotFoundException {
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
-        return ResponseEntity.ok().body(user);
+        ApiResponse res;
+
+        try {
+            User user =
+                    userRepository
+                            .findById(userId)
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
+
+            Profile profile = profileRepository
+                    .findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
+
+            res = new ApiResponse(HttpStatus.OK.value(), "User profile", profile);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
-     * Create new user.
-     *
-     * @param user the user
-     * @return the user
-     */
-    @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user) {
-        return userRepository.save(user);
-    }
-
-    /**
-     * Update user response entity.
+     * Update user profile entity.
      *
      * @param userId      the user id
      * @param userDetails the user details
@@ -70,20 +83,32 @@ public class UserController {
      * @throws ResourceNotFoundException the resource not found exception
      */
     @PutMapping("/users/{id}")
-    public ResponseEntity<User> updateUser(
-            @PathVariable(value = "id") Long userId, @Valid @RequestBody User userDetails)
+    public ResponseEntity<ApiResponse> updateUser(
+            @PathVariable(value = "id") Long userId, @Valid @RequestBody RegisterUser userDetails)
             throws ResourceNotFoundException {
+        ApiResponse res;
 
-        User user =
-                userRepository
-                        .findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
+        try {
+            User user =
+                    userRepository
+                            .findById(userId)
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
-        user.setEmail(userDetails.getEmail());
-//        user.setLastName(userDetails.getLastName());
-//        user.setFirstName(userDetails.getFirstName());
-        final User updatedUser = userRepository.save(user);
-        return ResponseEntity.ok(updatedUser);
+            Profile profile = profileRepository.findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
+
+            profile.setFirstName(userDetails.getFirstName());
+            profile.setLastName(userDetails.getLastName());
+            profile.setAddress(userDetails.getAddress());
+
+            final Profile updatedProfile = profileRepository.save(profile);
+
+            res = new ApiResponse(HttpStatus.OK.value(), "Update user profile", updatedProfile);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -100,9 +125,14 @@ public class UserController {
                         .findById(userId)
                         .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
+        Profile profile = profileRepository.findByUser(user)
+                .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
+
+        profileRepository.delete(profile);
         userRepository.delete(user);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
+
         return response;
     }
 }

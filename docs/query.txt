@@ -4,6 +4,7 @@ use chequealo;
 
 CREATE TABLE `schedule` (
   `schedule_id` int NOT NULL AUTO_INCREMENT,
+   `name` varchar(100),
   `income` time,
   `lunch_start` time,
   `lunch_end` time,
@@ -17,7 +18,7 @@ CREATE TABLE `user` (
   `role` varchar(15),
   `password` varchar(50),
   `email` varchar(35),
-  `apikey` varchar(100),
+  `apikey` longtext,
   `enabled` tinyint,
   `created_at` datetime,
   `updated_at` datetime,
@@ -56,3 +57,8 @@ CREATE TABLE `delay` (
   PRIMARY KEY (`delay_id`),
   FOREIGN KEY (`marking_id`) REFERENCES `marking`(`marking_id`)
 );
+
+-- Adding some schedules
+INSERT INTO schedule(name, income, lunch_start, lunch_end, output) values("Employee schedule", "06:00:00", "12:00:00", "13:00:00", "18:00:00");
+INSERT INTO schedule(name, income, lunch_start, lunch_end, output) values("Boos schedule", "08:00:00", "11:00:00", "13:30:00", "16:00:00");
+INSERT INTO schedule(name, income, lunch_start, lunch_end, output) values("Security schedule", "05:00:00", "12:00:00", "12:30:00", "20:00:00");

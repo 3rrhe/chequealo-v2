@@ -1,9 +1,10 @@
 package com.umg.rroca.wtorres.chequealo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "delay")
@@ -14,6 +15,7 @@ public class Delay {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long delayId;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "marking_id")
     private Marking marking;
@@ -21,6 +23,7 @@ public class Delay {
     @Column(name = "created_at", nullable = false)
     private Date createdAt = new Date();
 
+    @JsonIgnore
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
 

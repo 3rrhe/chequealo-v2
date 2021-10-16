@@ -1,5 +1,7 @@
 package com.umg.rroca.wtorres.chequealo.controller;
 
+import com.umg.rroca.wtorres.chequealo.model.Schedule;
+import com.umg.rroca.wtorres.chequealo.repository.ScheduleRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,9 @@ public class SecurityController {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private ScheduleRepository scheduleRepository;
 
     @Autowired
     EncryptService encryptService;
@@ -98,6 +103,23 @@ public class SecurityController {
             newProfile.setLastName(user.getLastName());
             newProfile.setAddress(user.getAddress());
             newProfile.setUserId(newUser);
+
+            Schedule schedule;
+
+            switch(newUser.getRole()) {
+                case "ROLE_BOSS":
+                    schedule = scheduleRepository.getById(2L);
+                    break;
+                case "ROLE_SECURITY":
+                    schedule = scheduleRepository.getById(3L);
+                    break;
+                case "ROLE_USER":
+                default:
+                    schedule = scheduleRepository.getById(1L);
+            }
+
+            newProfile.setSchedule(schedule);
+
             newProfile = profileRepository.save(newProfile);
 
             AuthUser authUser = new AuthUser();

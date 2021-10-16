@@ -1,16 +1,20 @@
 package com.umg.rroca.wtorres.chequealo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "user")
 @EntityListeners(AuditingEntityListener.class)
 public class User {
-    private static final String ROLE_CLIENT = "ROLE_USER";
+    public static final String ROLE_CLIENT = "ROLE_USER";
+    public static final String ROLE_BOSS = "ROLE_BOSS";
+    public static final String ROLE_SECURITY = "ROLE_SECURITY";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,6 +32,7 @@ public class User {
     @Column(name = "email", nullable = false)
     private String email;
 
+    @JsonIgnore
     @Column(name = "apikey", nullable = false)
     private String apikey = RandomStringUtils.randomAlphanumeric(20).toUpperCase();
 
@@ -37,11 +42,16 @@ public class User {
     @Column(name = "created_at", nullable = false)
     private Date createdAt = new Date();
 
+    @JsonIgnore
     @Column(name = "updated_at", nullable = false)
     private Date updatedAt = new Date();
 
+    @JsonIgnore
     @Column(name = "deleted_at", nullable = true)
     private Date deletedAt;
+
+    @Transient
+    private List<Profile> profiles;
 
     /**
      * Gets id.
@@ -221,6 +231,20 @@ public class User {
      */
     public void setDeletedAt(Date deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    /**
+     * @return the list of profiles
+     */
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
+
+    /**
+     * @param profiles the list of profiles
+     */
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
     }
 
     @Override

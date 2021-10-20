@@ -75,6 +75,36 @@ public class UserController {
     }
 
     /**
+     * Gets clients by username.
+     *
+     * @param username the username
+     * @return the user by username
+     * @throws ResourceNotFoundException the resource not found exception
+     */
+    @GetMapping("/users/{username}")
+    public ResponseEntity<ApiResponse> getUsersByUsername(@PathVariable(value = "username") String username)
+            throws ResourceNotFoundException {
+        ApiResponse res;
+
+        try {
+            User user =
+                    userRepository
+                            .findByUsername(username)
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
+
+            Profile profile = profileRepository
+                    .findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
+
+            res = new ApiResponse(HttpStatus.OK.value(), "User profile", profile);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
+        } catch (Exception e) {
+            res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
+            return new ResponseEntity<ApiResponse>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
      * Update user profile entity.
      *
      * @param userId      the user id

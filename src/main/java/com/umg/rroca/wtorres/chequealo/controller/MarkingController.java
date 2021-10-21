@@ -1,15 +1,13 @@
 package com.umg.rroca.wtorres.chequealo.controller;
 
-import com.umg.rroca.wtorres.chequealo.model.Delay;
-import com.umg.rroca.wtorres.chequealo.model.Schedule;
-import com.umg.rroca.wtorres.chequealo.repository.DelayRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import com.umg.rroca.wtorres.chequealo.model.*;
 import org.springframework.web.bind.annotation.*;
-import com.umg.rroca.wtorres.chequealo.model.Marking;
-import com.umg.rroca.wtorres.chequealo.model.Profile;
 import com.umg.rroca.wtorres.chequealo.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.umg.rroca.wtorres.chequealo.repository.UserRepository;
+import com.umg.rroca.wtorres.chequealo.repository.DelayRepository;
 import com.umg.rroca.wtorres.chequealo.repository.MarkingRepository;
 import com.umg.rroca.wtorres.chequealo.repository.ProfileRepository;
 import com.umg.rroca.wtorres.chequealo.exception.ResourceNotFoundException;
@@ -29,6 +27,9 @@ public class MarkingController {
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * Get all marking list.
@@ -51,18 +52,22 @@ public class MarkingController {
     /**
      * Get all profile marking list.
      *
-     * @param profileId the profileId
+     * @param username the profileId
      * @return the list
      */
-    @GetMapping("/profiles/{id}/markings")
-    public ResponseEntity<ApiResponse> getAllProfileMarkings(@PathVariable(value = "id") Long profileId) {
+    @GetMapping("/profiles/{username}/markings")
+    public ResponseEntity<ApiResponse> getAllProfileMarkings(@PathVariable(value = "username") String username) {
         ApiResponse res;
 
         try {
-            Profile profile =
-                    profileRepository
-                            .findById(profileId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Profile not found on :: " + profileId));
+            User user =
+                    userRepository
+                            .findByUsername(username)
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
+
+            Profile profile = profileRepository
+                    .findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
             List<Marking> markings = markingRepository.findAllByProfile(profile);
 
@@ -103,19 +108,24 @@ public class MarkingController {
     /**
      * Create new schedule.
      *
-     * @param profileId the profileId
+     * @param username the profileId
      * @return the schedule
      */
-    @PostMapping("/profiles/{id}/markings")
-    public ResponseEntity<ApiResponse> createSchedule(@PathVariable(value = "id") Long profileId) {
+    @PostMapping("/profiles/{username}/markings")
+    public ResponseEntity<ApiResponse> createSchedule(@PathVariable(value = "username") String username) {
         ApiResponse res;
 
         try {
             Marking marking;
-            Profile profile =
-                    profileRepository
-                            .findById(profileId)
-                            .orElseThrow(() -> new ResourceNotFoundException("Profile not found on :: " + profileId));
+            User user =
+                    userRepository
+                            .findByUsername(username)
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
+
+            Profile profile = profileRepository
+                    .findByUser(user)
+                    .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
+
             Schedule schedule = profile.getSchedule();
 
             List<Marking> markings = markingRepository
@@ -170,9 +180,9 @@ public class MarkingController {
      * @return the response entity
      * @throws ResourceNotFoundException the resource not found exception
      */
-    @PutMapping("/profiles/{id}/markings/{marking_id}")
+    @PutMapping("/profiles/{username}/markings/{marking_id}")
     public ResponseEntity<ApiResponse> updateSchedule(
-            @PathVariable(value = "id") Long profileId,
+            @PathVariable(value = "username") String username,
             @PathVariable(value = "marking_id") Long markingId)
             throws ResourceNotFoundException {
         ApiResponse res;

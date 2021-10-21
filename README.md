@@ -131,7 +131,7 @@ Response: `{
 }`
 
 #### Marking entry
-URL: `/api/v1/profiles/{id}/markings`\
+URL: `/api/v1/profiles/{username}/markings`\
 Method: `POST`\
 Response: `{
 "status": 200,
@@ -150,7 +150,7 @@ Response: `{
 }`
 
 #### Marking departure
-URL: `/api/v1/profiles/{id}/markings/{marking_id}`\
+URL: `/api/v1/profiles/{username}/markings/{marking_id}`\
 Method: `PUT`\
 Response: `{
 "status": 200,

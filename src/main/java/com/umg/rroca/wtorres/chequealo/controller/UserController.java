@@ -81,7 +81,7 @@ public class UserController {
      * @return the user by username
      * @throws ResourceNotFoundException the resource not found exception
      */
-    @GetMapping("/users/{username}")
+    @GetMapping("/profiles/{username}")
     public ResponseEntity<ApiResponse> getUsersByUsername(@PathVariable(value = "username") String username)
             throws ResourceNotFoundException {
         ApiResponse res;

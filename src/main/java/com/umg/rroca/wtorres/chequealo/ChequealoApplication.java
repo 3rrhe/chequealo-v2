@@ -11,13 +11,14 @@ import com.umg.rroca.wtorres.chequealo.security.JWTAuthorizationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @SpringBootApplication
 @EnableConfigurationProperties({ConfigProperty.class})
-public class ChequealoApplication {
+public class ChequealoApplication extends SpringBootServletInitializer {
     /**
      * @param args the args
      */

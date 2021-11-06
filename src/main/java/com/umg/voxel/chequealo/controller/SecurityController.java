@@ -1,24 +1,24 @@
 package com.umg.voxel.chequealo.controller;
 
-import com.umg.voxel.chequealo.model.Schedule;
-import com.umg.voxel.chequealo.repository.ScheduleRepository;
-import com.umg.voxel.chequealo.service.EncryptService;
-import com.umg.voxel.chequealo.utils.ConfigProperty;
-import com.umg.voxel.chequealo.utils.RegisterUser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import com.umg.voxel.chequealo.model.User;
-import com.umg.voxel.chequealo.model.Profile;
+import com.umg.voxel.chequealo.model.Cuser;
+import com.umg.voxel.chequealo.model.Schedule;
+import com.umg.voxel.chequealo.model.Employee;
 import com.umg.voxel.chequealo.utils.AuthUser;
+import org.springframework.http.ResponseEntity;
 import com.umg.voxel.chequealo.utils.ApiResponse;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.umg.voxel.chequealo.utils.RegisterUser;
+import com.umg.voxel.chequealo.utils.ConfigProperty;
+import com.umg.voxel.chequealo.service.EncryptService;
 import com.umg.voxel.chequealo.repository.UserRepository;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.GrantedAuthority;
 import com.umg.voxel.chequealo.repository.ProfileRepository;
+import com.umg.voxel.chequealo.repository.ScheduleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import com.umg.voxel.chequealo.exception.ResourceNotFoundException;
 
 import java.util.*;
@@ -58,12 +58,12 @@ public class SecurityController {
         ApiResponse response;
 
         try {
-            User existingUser =
+            Cuser existingCuser =
                     userRepository
                             .findByUsername(user.getUsername())
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + user.getUsername()));
 
-            if (existingUser.getPassword().equals(encryptService.encrypt(user.getPassword(), pwdSeed))) {
+            if (existingCuser.getPassword().equals(encryptService.encrypt(user.getPassword(), pwdSeed))) {
                 response = new ApiResponse(HttpStatus.OK.value(), "User logged", loginAction(user));
                 return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);
             } else {
@@ -91,22 +91,22 @@ public class SecurityController {
             String[] arrOfStr = email.split("@");
 
             // Creating new user
-            User newUser = new User();
-            newUser.setUsername(arrOfStr[0]);
-            newUser.setPassword(encryptService.encrypt(user.getPassword(), pwdSeed));
-            newUser.setEmail(email);
-            newUser = userRepository.save(newUser);
+            Cuser newCuser = new Cuser();
+            newCuser.setUsername(arrOfStr[0]);
+            newCuser.setPassword(encryptService.encrypt(user.getPassword(), pwdSeed));
+            newCuser.setEmail(email);
+            newCuser = userRepository.save(newCuser);
 
-            // Creating user profile
-            Profile newProfile = new Profile();
-            newProfile.setFirstName(user.getFirstName());
-            newProfile.setLastName(user.getLastName());
-            newProfile.setAddress(user.getAddress());
-            newProfile.setUserId(newUser);
+            // Creating user employee
+            Employee newEmployee = new Employee();
+            newEmployee.setFirstName(user.getFirstName());
+            newEmployee.setLastName(user.getLastName());
+            newEmployee.setAddress(user.getAddress());
+            newEmployee.setUserId(newCuser);
 
             Schedule schedule;
 
-            switch(newUser.getRole()) {
+            switch(newCuser.getRole()) {
                 case "ROLE_BOSS":
                     schedule = scheduleRepository.getById(2L);
                     break;
@@ -118,13 +118,13 @@ public class SecurityController {
                     schedule = scheduleRepository.getById(1L);
             }
 
-            newProfile.setSchedule(schedule);
+            newEmployee.setSchedule(schedule);
 
-            newProfile = profileRepository.save(newProfile);
+            newEmployee = profileRepository.save(newEmployee);
 
             AuthUser authUser = new AuthUser();
-            authUser.setUsername(newUser.getUsername());
-            authUser.setPassword(newUser.getPassword());
+            authUser.setUsername(newCuser.getUsername());
+            authUser.setPassword(newCuser.getPassword());
 
             response = new ApiResponse(HttpStatus.OK.value(), "User created success", loginAction(authUser));
             return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);

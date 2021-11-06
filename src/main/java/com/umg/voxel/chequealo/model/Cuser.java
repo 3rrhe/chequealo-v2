@@ -1,7 +1,7 @@
 package com.umg.voxel.chequealo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.RandomStringUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
@@ -9,18 +9,18 @@ import java.util.List;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user")
+@Table(name = "cuser")
 @EntityListeners(AuditingEntityListener.class)
-public class User {
+public class Cuser {
     public static final String ROLE_CLIENT = "ROLE_USER";
-    public static final String ROLE_BOSS = "ROLE_BOSS";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String ROLE_SECURITY = "ROLE_SECURITY";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long userId;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String username;
 
     @Column(name = "role", nullable = false)
@@ -51,7 +51,7 @@ public class User {
     private Date deletedAt;
 
     @Transient
-    private List<Profile> profiles;
+    private List<Employee> employees;
 
     /**
      * Gets id.
@@ -236,20 +236,20 @@ public class User {
     /**
      * @return the list of profiles
      */
-    public List<Profile> getProfiles() {
-        return profiles;
+    public List<Employee> getEmployees() {
+        return employees;
     }
 
     /**
-     * @param profiles the list of profiles
+     * @param employees the list of profiles
      */
-    public void setProfiles(List<Profile> profiles) {
-        this.profiles = profiles;
+    public void setEmployees(List<Employee> employees) {
+        this.employees = employees;
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "Cuser{" +
                 "id=" + userId +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +

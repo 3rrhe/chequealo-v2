@@ -12,8 +12,8 @@ import com.umg.voxel.chequealo.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.umg.voxel.chequealo.exception.ResourceNotFoundException;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -50,7 +50,7 @@ public class MarkingController {
     }
 
     /**
-     * Get all profile marking list.
+     * Get all employee marking list.
      *
      * @param username the profileId
      * @return the list
@@ -60,16 +60,16 @@ public class MarkingController {
         ApiResponse res;
 
         try {
-            User user =
+            Cuser cuser =
                     userRepository
                             .findByUsername(username)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
 
-            Profile profile = profileRepository
-                    .findByUser(user)
+            Employee employee = profileRepository
+                    .findByUser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
-            List<Marking> markings = markingRepository.findAllByProfile(profile);
+            List<Marking> markings = markingRepository.findAllByProfile(employee);
 
             res = new ApiResponse(HttpStatus.OK.value(), "Profile markings list", markings);
             return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
@@ -117,19 +117,19 @@ public class MarkingController {
 
         try {
             Marking marking;
-            User user =
+            Cuser cuser =
                     userRepository
                             .findByUsername(username)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
 
-            Profile profile = profileRepository
-                    .findByUser(user)
+            Employee employee = profileRepository
+                    .findByUser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
-            Schedule schedule = profile.getSchedule();
+            Schedule schedule = employee.getSchedule();
 
             List<Marking> markings = markingRepository
-                    .findAllByProfile(profile);
+                    .findAllByProfile(employee);
 
             if (markings.size() <= 0) {
                 marking = new Marking();
@@ -149,7 +149,7 @@ public class MarkingController {
                 }
             }
 
-            marking.setProfile(profile);
+            marking.setProfile(employee);
             marking.setEntryAt(new Date());
             String todayTime = new SimpleDateFormat("HH:mm:ss").format(marking.getEntryAt());
 
@@ -194,8 +194,8 @@ public class MarkingController {
                             .orElseThrow(() -> new ResourceNotFoundException("Marking not found on :: " + markingId));
             List<Delay> delays = delayRepository.findAllByMarking(marking);
             marking.setDepartureAt(new Date());
-            Profile profile = marking.getProfile();
-            Schedule schedule = profile.getSchedule();
+            Employee employee = marking.getProfile();
+            Schedule schedule = employee.getSchedule();
             String todayTime = new SimpleDateFormat("HH:mm:ss").format(marking.getDepartureAt());
 
             if (!todayTime.equals(schedule.getIncome().toString())) {

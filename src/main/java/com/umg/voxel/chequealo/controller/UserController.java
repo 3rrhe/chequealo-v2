@@ -1,15 +1,15 @@
 package com.umg.voxel.chequealo.controller;
 
-import com.umg.voxel.chequealo.utils.RegisterUser;
 import org.springframework.http.HttpStatus;
+import com.umg.voxel.chequealo.model.Cuser;
+import com.umg.voxel.chequealo.model.Employee;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import com.umg.voxel.chequealo.model.User;
-import com.umg.voxel.chequealo.model.Profile;
 import com.umg.voxel.chequealo.utils.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import com.umg.voxel.chequealo.utils.RegisterUser;
 import com.umg.voxel.chequealo.repository.UserRepository;
 import com.umg.voxel.chequealo.repository.ProfileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.umg.voxel.chequealo.exception.ResourceNotFoundException;
 
 import java.util.Map;
@@ -57,16 +57,16 @@ public class UserController {
         ApiResponse res;
 
         try {
-            User user =
+            Cuser cuser =
                     userRepository
                             .findById(userId)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
-            Profile profile = profileRepository
-                    .findByUser(user)
+            Employee employee = profileRepository
+                    .findByUser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
 
-            res = new ApiResponse(HttpStatus.OK.value(), "User profile", profile);
+            res = new ApiResponse(HttpStatus.OK.value(), "User employee", employee);
             return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
         } catch (Exception e) {
             res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
@@ -87,16 +87,16 @@ public class UserController {
         ApiResponse res;
 
         try {
-            User user =
+            Cuser cuser =
                     userRepository
                             .findByUsername(username)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
 
-            Profile profile = profileRepository
-                    .findByUser(user)
+            Employee employee = profileRepository
+                    .findByUser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
-            res = new ApiResponse(HttpStatus.OK.value(), "User profile", profile);
+            res = new ApiResponse(HttpStatus.OK.value(), "User employee", employee);
             return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
         } catch (Exception e) {
             res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
@@ -105,7 +105,7 @@ public class UserController {
     }
 
     /**
-     * Update user profile entity.
+     * Update user employee entity.
      *
      * @param userId      the user id
      * @param userDetails the user details
@@ -119,21 +119,21 @@ public class UserController {
         ApiResponse res;
 
         try {
-            User user =
+            Cuser cuser =
                     userRepository
                             .findById(userId)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
-            Profile profile = profileRepository.findByUser(user)
+            Employee employee = profileRepository.findByUser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
 
-            profile.setFirstName(userDetails.getFirstName());
-            profile.setLastName(userDetails.getLastName());
-            profile.setAddress(userDetails.getAddress());
+            employee.setFirstName(userDetails.getFirstName());
+            employee.setLastName(userDetails.getLastName());
+            employee.setAddress(userDetails.getAddress());
 
-            final Profile updatedProfile = profileRepository.save(profile);
+            final Employee updatedEmployee = profileRepository.save(employee);
 
-            res = new ApiResponse(HttpStatus.OK.value(), "Update user profile", updatedProfile);
+            res = new ApiResponse(HttpStatus.OK.value(), "Update user employee", updatedEmployee);
             return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
         } catch (Exception e) {
             res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
@@ -150,16 +150,16 @@ public class UserController {
      */
     @DeleteMapping("/users/{id}")
     public Map<String, Boolean> deleteUser(@PathVariable(value = "id") Long userId) throws Exception {
-        User user =
+        Cuser cuser =
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
-        Profile profile = profileRepository.findByUser(user)
+        Employee employee = profileRepository.findByUser(cuser)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
 
-        profileRepository.delete(profile);
-        userRepository.delete(user);
+        profileRepository.delete(employee);
+        userRepository.delete(cuser);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
 

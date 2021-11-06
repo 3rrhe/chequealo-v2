@@ -19,7 +19,7 @@ public class Marking {
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "profile_id")
-    private Profile profile;
+    private Employee employee;
 
     @Column(name = "entry_at", nullable = false)
     private Date entryAt;
@@ -53,21 +53,21 @@ public class Marking {
     }
 
     /**
-     * Gets profile.
+     * Gets employee.
      *
-     * @return the profile
+     * @return the employee
      */
-    public Profile getProfile() {
-        return profile;
+    public Employee getProfile() {
+        return employee;
     }
 
     /**
-     * Sets profile.
+     * Sets employee.
      *
-     * @param profile the profile
+     * @param employee the employee
      */
-    public void setProfile(Profile profile) {
-        this.profile = profile;
+    public void setProfile(Employee employee) {
+        this.employee = employee;
     }
 
     /**
@@ -142,7 +142,7 @@ public class Marking {
     public String toString() {
         return "Marking{" +
                 "id=" + markingId +
-                ", profileId='" + profile.getId() + '\'' +
+                ", profileId='" + employee.getId() + '\'' +
                 ", entryAt='" + entryAt.toString() + '\'' +
                 ", departureAt='" + departureAt.toString() + '\'' +
                 ", deletedAt='" + deletedAt.toString() + '\'' +

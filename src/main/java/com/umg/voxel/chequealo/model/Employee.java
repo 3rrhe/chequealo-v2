@@ -2,13 +2,13 @@ package com.umg.voxel.chequealo.model;
 
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
 import java.util.List;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "profile")
+@Table(name = "employee")
 @EntityListeners(AuditingEntityListener.class)
-public class Profile {
+public class Employee {
     private static final String JOB_OFFICE = "job_office";
 
     @Id
@@ -24,16 +24,13 @@ public class Profile {
     @Column(name = "address", nullable = false)
     private String address;
 
-    @Column(name = "job_position", nullable = false)
-    private String jobPosition = JOB_OFFICE;
-
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    private Schedule schedule;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private Cuser cuser;
+
+    @ManyToOne
+    @JoinColumn(name = "job_position_id")
+    private JobPosition jobPosition;
 
     @Transient
     private List<Marking> markings;
@@ -115,7 +112,7 @@ public class Profile {
      *
      * @return the jobPosition
      */
-    public String getJobPosition() {
+    public JobPosition getJobPosition() {
         return jobPosition;
     }
 
@@ -124,26 +121,8 @@ public class Profile {
      *
      * @param jobPosition the jobPosition
      */
-    public void setJobPosition(String jobPosition) {
+    public void setJobPosition(JobPosition jobPosition) {
         this.jobPosition = jobPosition;
-    }
-
-    /**
-     * Gets schedule.
-     *
-     * @return the schedule
-     */
-    public Schedule getSchedule() {
-        return schedule;
-    }
-
-    /**
-     * Sets schedule.
-     *
-     * @param schedule the schedule
-     */
-    public void setSchedule(Schedule schedule) {
-        this.schedule = schedule;
     }
 
     /**
@@ -151,17 +130,17 @@ public class Profile {
      *
      * @return the user
      */
-    public User getUser() {
-        return user;
+    public Cuser getUser() {
+        return cuser;
     }
 
     /**
      * Sets user.
      *
-     * @param user the user
+     * @param cuser the user
      */
-    public void setUserId(User user) {
-        this.user = user;
+    public void setUserId(Cuser cuser) {
+        this.cuser = cuser;
     }
 
     /**
@@ -178,6 +157,22 @@ public class Profile {
         this.markings = markings;
     }
 
+    /**
+     * Gets schedule.
+     *
+     * @return the schedule
+     */
+    public Schedule getSchedule() {
+        return jobPosition.getSchedule();
+    }
+
+    /**
+     * @param schedule the schedule
+     */
+    public void setSchedule(Schedule schedule) {
+        this.jobPosition.setSchedule(schedule);
+    }
+
     @Override
     public String toString() {
         return "Profile{" +
@@ -185,9 +180,8 @@ public class Profile {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +
-                ", jobPosition='" + jobPosition + '\'' +
-                ", scheduleId='" + schedule.getId() + '\'' +
-                ", userId='" + user.getId() + '\'' +
+                ", jobPosition='" + jobPosition.getId() + '\'' +
+                ", userId='" + cuser.getId() + '\'' +
                 '}';
     }
 }

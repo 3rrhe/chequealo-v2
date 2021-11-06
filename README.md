@@ -61,14 +61,14 @@ Response: `{
 "output": "18:00:00",
 "id": 1
 },
-"user": {
+"cuser": {
 "username": "prueba",
 "role": "ROLE_USER",
 "password": "prueba",
 "email": "prueba@prueba.com",
 "enabled": true,
 "createdAt": "2021-10-15T23:26:51.000+00:00",
-"profiles": null,
+"employees": null,
 "id": 1,
 "updateAt": "2021-10-15T23:26:51.000+00:00"
 },
@@ -131,7 +131,7 @@ Response: `{
 }`
 
 #### Marking entry
-URL: `/api/v1/profiles/{username}/markings`\
+URL: `/api/v1/employees/{username}/markings`\
 Method: `POST`\
 Response: `{
 "status": 200,
@@ -150,7 +150,7 @@ Response: `{
 }`
 
 #### Marking departure
-URL: `/api/v1/profiles/{username}/markings/{marking_id}`\
+URL: `/api/v1/employees/{username}/markings/{marking_id}`\
 Method: `PUT`\
 Response: `{
 "status": 200,

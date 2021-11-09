@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface MarkingRepository extends JpaRepository<Marking, Long> {
-    List<Marking> findAllByProfile(Employee employee);
+    List<Marking> findAllByEmployee(Employee employee);
 }

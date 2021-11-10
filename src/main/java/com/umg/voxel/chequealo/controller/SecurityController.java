@@ -4,10 +4,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.http.HttpStatus;
 import com.umg.voxel.chequealo.model.Cuser;
-import com.umg.voxel.chequealo.model.Schedule;
 import com.umg.voxel.chequealo.model.Employee;
 import com.umg.voxel.chequealo.utils.AuthUser;
 import org.springframework.http.ResponseEntity;
+import com.umg.voxel.chequealo.model.JobPosition;
 import com.umg.voxel.chequealo.utils.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 import com.umg.voxel.chequealo.utils.RegisterUser;
@@ -16,8 +16,8 @@ import com.umg.voxel.chequealo.service.EncryptService;
 import com.umg.voxel.chequealo.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
 import com.umg.voxel.chequealo.repository.EmployeeRepository;
-import com.umg.voxel.chequealo.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.umg.voxel.chequealo.repository.JobPositionRepository;
 import org.springframework.security.core.authority.AuthorityUtils;
 import com.umg.voxel.chequealo.exception.ResourceNotFoundException;
 
@@ -37,7 +37,7 @@ public class SecurityController {
     private EmployeeRepository profileRepository;
 
     @Autowired
-    private ScheduleRepository scheduleRepository;
+    private JobPositionRepository jobPositionRepository;
 
     @Autowired
     EncryptService encryptService;
@@ -57,29 +57,24 @@ public class SecurityController {
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody AuthUser user) {
         ApiResponse response;
 
-//        try {
-            Optional<Cuser> eexistingCuser =
+        try {
+            Cuser existingUser =
                     userRepository
-                            .findByUsername(user.getUsername());
+                            .findByUsername(user.getUsername())
+                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + user.getUsername()));
 
-            if (eexistingCuser.isPresent()) {
-                Cuser existingCuser = eexistingCuser.get();
-
-                if (existingCuser.getPassword().equals(encryptService.encrypt(user.getPassword(), pwdSeed))) {
-                    response = new ApiResponse(HttpStatus.OK.value(), "User logged", loginAction(user));
-                    return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);
-                } else {
-                    response = new ApiResponse(HttpStatus.FORBIDDEN.value(), "Invalid credentials", null);
-                    return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
-                }
+            if (existingUser.getPassword().equals(encryptService.encrypt(user.getPassword(), pwdSeed))) {
+                user.setRole(existingUser.getRole());
+                response = new ApiResponse(HttpStatus.OK.value(), "User logged", loginAction(user));
+                return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);
             } else {
-                response = new ApiResponse(HttpStatus.NOT_FOUND.value(), "kjhkj", null);
+                response = new ApiResponse(HttpStatus.FORBIDDEN.value(), "Invalid credentials", null);
                 return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
             }
-//        } catch (ResourceNotFoundException e) {
-//            response = new ApiResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null);
-//            return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
-//        }
+        } catch (ResourceNotFoundException e) {
+            response = new ApiResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null);
+            return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
+        }
     }
 
     /**
@@ -101,36 +96,30 @@ public class SecurityController {
             newCuser.setUsername(arrOfStr[0]);
             newCuser.setPassword(encryptService.encrypt(user.getPassword(), pwdSeed));
             newCuser.setEmail(email);
+            newCuser.setRole(user.getRole());
             newCuser = userRepository.save(newCuser);
 
-            // Creating user employee
-            Employee newEmployee = new Employee();
-            newEmployee.setFirstName(user.getFirstName());
-            newEmployee.setLastName(user.getLastName());
-            newEmployee.setAddress(user.getAddress());
-            newEmployee.setUser(newCuser);
+            if (newCuser.getRole().equals(Cuser.ROLE_CLIENT)) {
+                JobPosition jobPosition = jobPositionRepository
+                        .findById(1L)
+                        .orElseThrow(() -> new ResourceNotFoundException("Job Position not found for :: " + user.getUsername()));
 
-            Schedule schedule;
+                // Creating user employee
+                Employee newEmployee = new Employee();
+                newEmployee.setFirstName(user.getFirstName());
+                newEmployee.setLastName(user.getLastName());
+                newEmployee.setAddress(user.getAddress());
+                newEmployee.setUser(newCuser);
 
-            switch(newCuser.getRole()) {
-                case "ROLE_BOSS":
-                    schedule = scheduleRepository.getById(2L);
-                    break;
-                case "ROLE_SECURITY":
-                    schedule = scheduleRepository.getById(3L);
-                    break;
-                case "ROLE_USER":
-                default:
-                    schedule = scheduleRepository.getById(1L);
+                newEmployee.setJobPosition(jobPosition);
+
+                profileRepository.save(newEmployee);
             }
-
-            newEmployee.setSchedule(schedule);
-
-            newEmployee = profileRepository.save(newEmployee);
 
             AuthUser authUser = new AuthUser();
             authUser.setUsername(newCuser.getUsername());
             authUser.setPassword(newCuser.getPassword());
+            authUser.setRole(newCuser.getRole());
 
             response = new ApiResponse(HttpStatus.OK.value(), "User created success", loginAction(authUser));
             return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);

@@ -25,7 +25,7 @@ public class Employee {
     private String address;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "cuser_id")
     private Cuser cuser;
 
     @ManyToOne
@@ -139,7 +139,7 @@ public class Employee {
      *
      * @param cuser the user
      */
-    public void setUserId(Cuser cuser) {
+    public void setUser(Cuser cuser) {
         this.cuser = cuser;
     }
 

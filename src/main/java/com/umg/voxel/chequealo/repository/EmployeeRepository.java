@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProfileRepository extends JpaRepository<Employee, Long> {
-    List<Employee> findAllByUser(Cuser cuser);
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+    List<Employee> findAllByCuser(Cuser cuser);
 
-    Optional<Employee> findByUser(Cuser cuser);
+    Optional<Employee> findByCuser(Cuser cuser);
 }

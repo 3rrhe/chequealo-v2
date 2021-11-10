@@ -17,8 +17,7 @@ public class Cuser {
     public static final String ROLE_SECURITY = "ROLE_SECURITY";
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "Cuser_Sequence")
-    @SequenceGenerator(name = "Cuser_Sequence", sequenceName = "CUSER_SEQ")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long cuserId;
 
     @Column(name = "user_name", unique=true, nullable = false)

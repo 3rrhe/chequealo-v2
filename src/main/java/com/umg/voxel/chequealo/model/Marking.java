@@ -18,7 +18,7 @@ public class Marking {
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "employee_id")
+    @JoinColumn(name = "employee_id", nullable = false)
     private Employee employee;
 
     @Column(name = "entry_at", nullable = false)

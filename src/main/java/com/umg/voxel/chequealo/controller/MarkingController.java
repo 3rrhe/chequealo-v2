@@ -8,7 +8,7 @@ import com.umg.voxel.chequealo.utils.ApiResponse;
 import com.umg.voxel.chequealo.repository.UserRepository;
 import com.umg.voxel.chequealo.repository.DelayRepository;
 import com.umg.voxel.chequealo.repository.MarkingRepository;
-import com.umg.voxel.chequealo.repository.ProfileRepository;
+import com.umg.voxel.chequealo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.umg.voxel.chequealo.exception.ResourceNotFoundException;
 
@@ -26,7 +26,7 @@ public class MarkingController {
     private DelayRepository delayRepository;
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -55,7 +55,7 @@ public class MarkingController {
      * @param username the profileId
      * @return the list
      */
-    @GetMapping("/profiles/{username}/markings")
+    @GetMapping("/employees/{username}/markings")
     public ResponseEntity<ApiResponse> getAllProfileMarkings(@PathVariable(value = "username") String username) {
         ApiResponse res;
 
@@ -65,11 +65,11 @@ public class MarkingController {
                             .findByUsername(username)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
 
-            Employee employee = profileRepository
-                    .findByUser(cuser)
+            Employee employee = employeeRepository
+                    .findByCuser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
-            List<Marking> markings = markingRepository.findAllByProfile(employee);
+            List<Marking> markings = markingRepository.findAllByEmployee(employee);
 
             res = new ApiResponse(HttpStatus.OK.value(), "Profile markings list", markings);
             return new ResponseEntity<ApiResponse>(res, HttpStatus.OK);
@@ -108,10 +108,10 @@ public class MarkingController {
     /**
      * Create new schedule.
      *
-     * @param username the profileId
+     * @param username the username
      * @return the schedule
      */
-    @PostMapping("/profiles/{username}/markings")
+    @PostMapping("/employees/{username}/markings")
     public ResponseEntity<ApiResponse> createSchedule(@PathVariable(value = "username") String username) {
         ApiResponse res;
 
@@ -122,14 +122,14 @@ public class MarkingController {
                             .findByUsername(username)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
 
-            Employee employee = profileRepository
-                    .findByUser(cuser)
+            Employee employee = employeeRepository
+                    .findByCuser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
             Schedule schedule = employee.getSchedule();
 
             List<Marking> markings = markingRepository
-                    .findAllByProfile(employee);
+                    .findAllByEmployee(employee);
 
             if (markings.size() <= 0) {
                 marking = new Marking();
@@ -149,7 +149,7 @@ public class MarkingController {
                 }
             }
 
-            marking.setProfile(employee);
+            marking.setEmployee(employee);
             marking.setEntryAt(new Date());
             String todayTime = new SimpleDateFormat("HH:mm:ss").format(marking.getEntryAt());
 
@@ -180,7 +180,7 @@ public class MarkingController {
      * @return the response entity
      * @throws ResourceNotFoundException the resource not found exception
      */
-    @PutMapping("/profiles/{username}/markings/{marking_id}")
+    @PutMapping("/employees/{username}/markings/{marking_id}")
     public ResponseEntity<ApiResponse> updateSchedule(
             @PathVariable(value = "username") String username,
             @PathVariable(value = "marking_id") Long markingId)
@@ -194,7 +194,7 @@ public class MarkingController {
                             .orElseThrow(() -> new ResourceNotFoundException("Marking not found on :: " + markingId));
             List<Delay> delays = delayRepository.findAllByMarking(marking);
             marking.setDepartureAt(new Date());
-            Employee employee = marking.getProfile();
+            Employee employee = marking.getEmployee();
             Schedule schedule = employee.getSchedule();
             String todayTime = new SimpleDateFormat("HH:mm:ss").format(marking.getDepartureAt());
 

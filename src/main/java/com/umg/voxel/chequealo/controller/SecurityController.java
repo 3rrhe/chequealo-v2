@@ -15,7 +15,7 @@ import com.umg.voxel.chequealo.utils.ConfigProperty;
 import com.umg.voxel.chequealo.service.EncryptService;
 import com.umg.voxel.chequealo.repository.UserRepository;
 import org.springframework.security.core.GrantedAuthority;
-import com.umg.voxel.chequealo.repository.ProfileRepository;
+import com.umg.voxel.chequealo.repository.EmployeeRepository;
 import com.umg.voxel.chequealo.repository.ScheduleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -34,7 +34,7 @@ public class SecurityController {
     private UserRepository userRepository;
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private EmployeeRepository profileRepository;
 
     @Autowired
     private ScheduleRepository scheduleRepository;
@@ -57,23 +57,29 @@ public class SecurityController {
     public ResponseEntity<ApiResponse> login(@Valid @RequestBody AuthUser user) {
         ApiResponse response;
 
-        try {
-            Cuser existingCuser =
+//        try {
+            Optional<Cuser> eexistingCuser =
                     userRepository
-                            .findByUsername(user.getUsername())
-                            .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + user.getUsername()));
+                            .findByUsername(user.getUsername());
 
-            if (existingCuser.getPassword().equals(encryptService.encrypt(user.getPassword(), pwdSeed))) {
-                response = new ApiResponse(HttpStatus.OK.value(), "User logged", loginAction(user));
-                return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);
+            if (eexistingCuser.isPresent()) {
+                Cuser existingCuser = eexistingCuser.get();
+
+                if (existingCuser.getPassword().equals(encryptService.encrypt(user.getPassword(), pwdSeed))) {
+                    response = new ApiResponse(HttpStatus.OK.value(), "User logged", loginAction(user));
+                    return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);
+                } else {
+                    response = new ApiResponse(HttpStatus.FORBIDDEN.value(), "Invalid credentials", null);
+                    return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
+                }
             } else {
-                response = new ApiResponse(HttpStatus.FORBIDDEN.value(), "Invalid credentials", null);
+                response = new ApiResponse(HttpStatus.NOT_FOUND.value(), "kjhkj", null);
                 return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
             }
-        } catch (ResourceNotFoundException e) {
-            response = new ApiResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null);
-            return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
-        }
+//        } catch (ResourceNotFoundException e) {
+//            response = new ApiResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), null);
+//            return new ResponseEntity<ApiResponse>(response, HttpStatus.NOT_FOUND);
+//        }
     }
 
     /**
@@ -102,7 +108,7 @@ public class SecurityController {
             newEmployee.setFirstName(user.getFirstName());
             newEmployee.setLastName(user.getLastName());
             newEmployee.setAddress(user.getAddress());
-            newEmployee.setUserId(newCuser);
+            newEmployee.setUser(newCuser);
 
             Schedule schedule;
 

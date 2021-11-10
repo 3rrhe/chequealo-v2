@@ -9,7 +9,6 @@ import javax.persistence.*;
 @Table(name = "employee")
 @EntityListeners(AuditingEntityListener.class)
 public class Employee {
-    private static final String JOB_OFFICE = "job_office";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

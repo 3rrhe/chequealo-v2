@@ -1,5 +1,9 @@
 package com.umg.voxel.chequealo.controller;
 
+import com.umg.voxel.chequealo.model.JobPosition;
+import com.umg.voxel.chequealo.repository.JobPositionRepository;
+import com.umg.voxel.chequealo.service.EncryptService;
+import com.umg.voxel.chequealo.utils.AuthUser;
 import org.springframework.http.HttpStatus;
 import com.umg.voxel.chequealo.model.Cuser;
 import com.umg.voxel.chequealo.model.Employee;
@@ -26,6 +30,16 @@ public class UserController {
     @Autowired
     private EmployeeRepository profileRepository;
 
+    @Autowired
+    private JobPositionRepository jobPositionRepository;
+
+    @Autowired
+    EncryptService encryptService;
+
+    private String secretJWT;
+    private int expirationJWT;
+    private String pwdSeed;
+
     /**
      * Get all User list.
      *
@@ -41,6 +55,52 @@ public class UserController {
         } catch (Exception e) {
             res = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
             return new ResponseEntity<ApiResponse>(res, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Create new user.
+     *
+     * @return the user
+     */
+    @PostMapping("/users")
+    public ResponseEntity<ApiResponse> createNewUser(@Valid @RequestBody RegisterUser user) {
+        ApiResponse response;
+
+        try {
+            String email = user.getEmail();
+            String[] arrOfStr = email.split("@");
+
+            // Creating new user
+            Cuser newCuser = new Cuser();
+            newCuser.setUsername(arrOfStr[0]);
+            newCuser.setPassword(encryptService.encrypt(user.getPassword(), pwdSeed));
+            newCuser.setEmail(email);
+            newCuser.setRole(user.getRole());
+            newCuser = userRepository.save(newCuser);
+
+            if (newCuser.getRole().equals(Cuser.ROLE_CLIENT)) {
+                JobPosition jobPosition = jobPositionRepository
+                        .findById(1L)
+                        .orElseThrow(() -> new ResourceNotFoundException("Job Position not found for :: " + user.getUsername()));
+
+                // Creating user employee
+                Employee newEmployee = new Employee();
+                newEmployee.setFirstName(user.getFirstName());
+                newEmployee.setLastName(user.getLastName());
+                newEmployee.setAddress(user.getAddress());
+                newEmployee.setUser(newCuser);
+
+                newEmployee.setJobPosition(jobPosition);
+
+                profileRepository.save(newEmployee);
+            }
+
+            response = new ApiResponse(HttpStatus.OK.value(), "User created success", newCuser);
+            return new ResponseEntity<ApiResponse>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response = new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
+            return new ResponseEntity<ApiResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

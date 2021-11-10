@@ -10,6 +10,8 @@ import javax.persistence.*;
 @Table(name = "delay")
 @EntityListeners(AuditingEntityListener.class)
 public class Delay {
+    public static final String TYPE_DELAY = "delay";
+    public static final String TYPE_ADVANCE = "advance";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,8 +25,11 @@ public class Delay {
     @Column(name = "created_at", nullable = false)
     private Date createdAt = new Date();
 
+    @Column(name = "type")
+    private String type = TYPE_DELAY;
+
     @JsonIgnore
-    @Column(name = "deleted_at", nullable = true)
+    @Column(name = "deleted_at")
     private Date deletedAt;
 
     /**
@@ -82,6 +87,24 @@ public class Delay {
     }
 
     /**
+     * Gets type.
+     *
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * Sets type.
+     *
+     * @param type the type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
      * Gets deletedAt.
      *
      * @return the deletedAt
@@ -104,6 +127,7 @@ public class Delay {
         return "Delay{" +
                 "id=" + delayId +
                 ", markingId='" + marking.getId() + '\'' +
+                ", type='" + type + '\'' +
                 ", createdAt='" + createdAt.toString() + '\'' +
                 ", deletedAt='" + deletedAt.toString() + '\'' +
                 '}';

@@ -103,7 +103,6 @@ public class ScheduleController {
                             .findById(scheduleId)
                             .orElseThrow(() -> new ResourceNotFoundException("Schedule not found on :: " + scheduleId));
 
-            schedule.setName(scheduleDetails.getName());
             schedule.setIncome(scheduleDetails.getIncome());
             schedule.setLunchStart(scheduleDetails.getLunchStart());
             schedule.setLunchEnd(scheduleDetails.getLunchEnd());

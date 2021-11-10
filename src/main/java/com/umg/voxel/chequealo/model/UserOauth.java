@@ -23,7 +23,7 @@ public class UserOauth {
     @Column(name = "identifier", nullable = false)
     private String identifier;
 
-    @Column(name = "acces_token", nullable = false)
+    @Column(name = "access_token", nullable = false)
     private String accessToken;
 
     @JsonIgnore

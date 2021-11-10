@@ -4,7 +4,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Time;
-import java.util.Date;
 
 @Entity
 @Table(name = "schedule")
@@ -14,9 +13,6 @@ public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long scheduleId;
-
-    @Column(name = "name", nullable = false)
-    private String name;
 
     @Column(name = "income", nullable = false)
     private Time income;
@@ -46,24 +42,6 @@ public class Schedule {
      */
     public void setId(long id) {
         this.scheduleId = id;
-    }
-
-    /**
-     * Gets name.
-     *
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets name.
-     *
-     * @param name the name
-     */
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -142,7 +120,6 @@ public class Schedule {
     public String toString() {
         return "Schedule{" +
                 "id=" + scheduleId +
-                ", name='" + name + '\'' +
                 ", income='" + income.toString() + '\'' +
                 ", lunchStart='" + lunchStart.toString() + '\'' +
                 ", lunchEnd='" + lunchEnd.toString() + '\'' +

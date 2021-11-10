@@ -1,0 +1,108 @@
+create database chequealo;
+
+use chequealo;
+
+CREATE TABLE `department` (
+  `department_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255),
+  `description` longtext,
+  PRIMARY KEY (`department_id`)
+);
+
+CREATE TABLE `cuser` (
+  `cuser_id` int NOT NULL AUTO_INCREMENT,
+  `username` varchar(25),
+  `role` varchar(15),
+  `password` varchar(10),
+  `email` varchar(35),
+  `enabled` tinyint,
+  `created_at` datetime,
+  `updated_at` datetime,
+  `deleted_at` datetime,
+  PRIMARY KEY (`cuser_id`)
+);
+
+CREATE TABLE `user_oauth` (
+  `user_oath_id` int NOT NULL AUTO_INCREMENT,
+  `cuser_id` int,
+  `provider` varchar(50),
+  `identifier` varchar(255),
+  `access_token` varchar(255),
+  `refresh_token` varchar(255),
+  PRIMARY KEY (`user_oath_id`),
+  FOREIGN KEY (`cuser_id`) REFERENCES `cuser`(`cuser_id`)
+);
+
+CREATE TABLE `schedule` (
+  `schedule_id` int NOT NULL AUTO_INCREMENT,
+  `income` time,
+  `lunch_start` time,
+  `lunch_end` time,
+  `output` time,
+  PRIMARY KEY (`schedule_id`)
+);
+
+CREATE TABLE `job_position` (
+  `job_position_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255),
+  `description` longtext,
+  `department_id` int,
+  `schedule_id` int,
+  PRIMARY KEY (`job_position_id`),
+  FOREIGN KEY (`schedule_id`) REFERENCES `schedule`(`schedule_id`),
+  FOREIGN KEY (`department_id`) REFERENCES `department`(`department_id`)
+);
+
+CREATE TABLE `employee` (
+  `employee_id` int NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(255),
+  `last_name` varchar(255),
+  `address` varchar(255),
+  `cuser_id` int,
+  `job_position_id` int,
+  PRIMARY KEY (`employee_id`),
+  FOREIGN KEY (`cuser_id`) REFERENCES `cuser`(`cuser_id`),
+  FOREIGN KEY (`job_position_id`) REFERENCES `job_position`(`job_position_id`)
+);
+
+CREATE TABLE `marking` (
+  `marking_id` int NOT NULL AUTO_INCREMENT,
+  `employee_id` int,
+  `entry_at` datetime,
+  `departure_at` datetime,
+  `deleted_at` datetime,
+  PRIMARY KEY (`marking_id`),
+  FOREIGN KEY (`employee_id`) REFERENCES `employee`(`employee_id`)
+);
+
+CREATE TABLE `delay` (
+  `delay_id` int NOT NULL AUTO_INCREMENT,
+  `created_at` datetime,
+  `marking_id` int,
+  `deleted_at` datetime,
+  `type` varchar(50),
+  PRIMARY KEY (`delay_id`),
+  FOREIGN KEY (`marking_id`) REFERENCES `marking`(`marking_id`)
+);
+
+-- Adding admin user
+INSERT INTO cuser(username, role, password, email, enabled, created_at, updated_at) values("admin", "ROLE_ADMIN", "826455", "rroca@praga.ws", 1, now() , now());
+
+-- Adding some initial departments
+INSERT INTO department(name, description) values("IT", "El departamento que ve las IT's");
+INSERT INTO department(name, description) values("Ventas", "El departamento que ve las ventas");
+INSERT INTO department(name, description) values("Recursos Humanos", "El departamento que ve los recursos humanos");
+INSERT INTO department(name, description) values("QA", "El departamento que ve QA");
+INSERT INTO department(name, description) values("Seguridad y seguridad informatica", "El departamento que ve la seguridad general y la seguridad informatica");
+
+-- Adding some initial schedules
+INSERT INTO schedule(income, lunch_start, lunch_end, output) values("06:00:00", "12:00:00", "13:00:00", "18:00:00"); -- Default employee schedule
+INSERT INTO schedule(income, lunch_start, lunch_end, output) values("08:00:00", "11:00:00", "13:30:00", "16:00:00"); -- Boss schedule
+INSERT INTO schedule(income, lunch_start, lunch_end, output) values("05:00:00", "12:00:00", "12:30:00", "20:00:00"); -- Security employee schedule
+
+-- Adding some initial job positions
+INSERT INTO job_position(name, description, department_id, schedule_id) values("Programador JR", "Es un programador novato", 1, 1);
+INSERT INTO job_position(name, description, department_id, schedule_id) values("Programador Middle", "Es un programador con experiencia media", 1, 1);
+INSERT INTO job_position(name, description, department_id, schedule_id) values("Programador Master", "Es un programador con mucha experiencia", 1, 1);
+INSERT INTO job_position(name, description, department_id, schedule_id) values("Reclutador", "Es parte del equipo de reclutamiento", 3, 1);
+INSERT INTO job_position(name, description, department_id, schedule_id) values("Guardia", "Guardia de la empresa", 5, 3);

@@ -14,9 +14,10 @@ Response: `{
 "status": 200,
 "message": "User logged",
 "data": {
-"username": "prueba",
-"password": "prueba",
-"bearer": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjaGVxdWVhbG9KV1QiLCJzdWIiOiJycm9jYWUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM0MzUzODk1LCJleHAiOjE2MzQzNTQxOTV9.Yj-NwS9bVBeNLfXpbC2wVa9Ux6M8AXUdYixZwGkTDHEG_9rXKn14tryZZqtq3snqO-qcmbFniqON9E4zwdjYMA"
+"username": "admin",
+"password": "826455",
+"role": "ROLE_ADMIN",
+"bearer": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjaGVxdWVhbG9KV1QiLCJzdWIiOiJhZG1pbiIsImF1dGhvcml0aWVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2MzY1MTUxMTUsImV4cCI6MTYzNjUxNTQxNX0.mprcpVn8LLroAxTMucN1RkVHsW9I8K_6rms6_lE-T3wV_FQWE6g-iw7r9-k1W8V97N9-BQbhA4htBTvEvfj-1g"
 }
 }`
 
@@ -36,7 +37,8 @@ Response: `{
 "data": {
 "username": "prueba",
 "password": "prueba",
-"bearer": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjaGVxdWVhbG9KV1QiLCJzdWIiOiJycm9jYWUiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM0MzQwNDExLCJleHAiOjE2MzQzNDA3MTF9.1vJrkjhn1IeghUmrRn2_9kZekLwL_OtE8JM2u3Q0SAFadT_k275ZHOxTRAV31dQhSpCUVMiCLFhzZdHZeM7t1w"
+"role": "ROLE_USER",
+"bearer": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJjaGVxdWVhbG9KV1QiLCJzdWIiOiJwcnVlYmEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM2NTE1NjEyLCJleHAiOjE2MzY1MTU5MTJ9.KuIHtkw_RkX9t6wMkPkdkhlQ0RkfYnTodmhEO1Kvt1AY93zPq_3pZG2uk8SQqVWOcSRO8TmqbQyqVyAx9q0TxQ"
 }
 }`
 

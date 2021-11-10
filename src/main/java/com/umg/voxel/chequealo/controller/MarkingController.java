@@ -151,14 +151,23 @@ public class MarkingController {
 
             marking.setEmployee(employee);
             marking.setEntryAt(new Date());
-            String todayTime = new SimpleDateFormat("HH:mm:ss").format(marking.getEntryAt());
+            Date today = new Date();
 
             markingRepository.save(marking);
             List<Delay> delays = delayRepository.findAllByMarking(marking);
 
-            if (!todayTime.equals(schedule.getIncome().toString())) {
+            if (!today.equals(schedule.getIncome())) {
                 Delay delay = new Delay();
                 delay.setMarking(marking);
+
+                if (!today.before(schedule.getIncome())) {
+                    delay.setType(Delay.TYPE_ADVANCE);
+                }
+
+                if (!today.after(schedule.getIncome())) {
+                    delay.setType(Delay.TYPE_DELAY);
+                }
+
                 delayRepository.save(delay);
 
                 delays.add(delay);
@@ -196,11 +205,19 @@ public class MarkingController {
             marking.setDepartureAt(new Date());
             Employee employee = marking.getEmployee();
             Schedule schedule = employee.getSchedule();
-            String todayTime = new SimpleDateFormat("HH:mm:ss").format(marking.getDepartureAt());
 
-            if (!todayTime.equals(schedule.getIncome().toString())) {
+            if (!marking.getDepartureAt().equals(schedule.getOutput())) {
                 Delay delay = new Delay();
                 delay.setMarking(marking);
+
+                if (marking.getDepartureAt().before(schedule.getOutput())) {
+                    delay.setType(Delay.TYPE_ADVANCE);
+                }
+
+                if (marking.getDepartureAt().after(schedule.getOutput())) {
+                    delay.setType(Delay.TYPE_DELAY);
+                }
+
                 delayRepository.save(delay);
                 delays.add(delay);
             }

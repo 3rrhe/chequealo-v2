@@ -12,7 +12,7 @@ public class Employee {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long profileId;
+    private long employeeId;
 
     @Column(name = "first_name", nullable = false)
     private String firstName;
@@ -40,7 +40,7 @@ public class Employee {
      * @return the id
      */
     public long getId() {
-        return profileId;
+        return employeeId;
     }
 
     /**
@@ -49,7 +49,7 @@ public class Employee {
      * @param id the id
      */
     public void setId(long id) {
-        this.profileId = id;
+        this.employeeId = id;
     }
 
     /**
@@ -175,7 +175,7 @@ public class Employee {
     @Override
     public String toString() {
         return "Profile{" +
-                "id=" + profileId +
+                "id=" + employeeId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", address='" + address + '\'' +

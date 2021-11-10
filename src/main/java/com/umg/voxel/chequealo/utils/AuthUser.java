@@ -1,11 +1,14 @@
 package com.umg.voxel.chequealo.utils;
 
+import com.umg.voxel.chequealo.model.Cuser;
+
 /**
  * AuthUser class used to make login in API
  */
 public class AuthUser {
     private String username;
     private String password;
+    private String role = Cuser.ROLE_CLIENT;
     private String bearer;
 
     /**
@@ -34,6 +37,20 @@ public class AuthUser {
      */
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    /**
+     * @return string
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role
+     */
+    public void setRole(String role) {
+        this.role = role;
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.umg.voxel.chequealo.model;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -17,11 +16,10 @@ public class Cuser {
     public static final String ROLE_SECURITY = "ROLE_SECURITY";
 
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "Cuser_Sequence")
-    @SequenceGenerator(name = "Cuser_Sequence", sequenceName = "CUSER_SEQ")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private long cuserId;
 
-    @Column(name = "user_name", unique=true, nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
     @Column(name = "role", nullable = false)
@@ -32,10 +30,6 @@ public class Cuser {
 
     @Column(name = "email", nullable = false)
     private String email;
-
-    @JsonIgnore
-    @Column(name = "apikey", nullable = false)
-    private String apikey = RandomStringUtils.randomAlphanumeric(20).toUpperCase();
 
     @Column(name = "enabled", nullable = false)
     private Boolean enabled = true;
@@ -106,24 +100,6 @@ public class Cuser {
      */
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    /**
-     * Gets apikey.
-     *
-     * @return the apikey
-     */
-    public String getApikey() {
-        return apikey;
-    }
-
-    /**
-     * Sets apikey.
-     *
-     * @param apikey the apikey
-     */
-    public void setApikey(String apikey) {
-        this.apikey = apikey;
     }
 
     /**
@@ -254,7 +230,6 @@ public class Cuser {
                 "id=" + cuserId +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
-                ", apikey='" + apikey + '\'' +
                 ", role='" + role + '\'' +
                 ", enabled='" + enabled + '\'' +
                 ", createdAt='" + createdAt.toString() + '\'' +

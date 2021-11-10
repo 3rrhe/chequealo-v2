@@ -1,5 +1,7 @@
 package com.umg.voxel.chequealo.utils;
 
+import com.umg.voxel.chequealo.model.Cuser;
+
 /**
  * RegisterUser class used to register in API
  */
@@ -11,6 +13,8 @@ public class RegisterUser {
     private String lastName;
     private String address;
     private String bearer;
+    private String role = Cuser.ROLE_CLIENT;
+    private Long jobPosition = 1L;
 
     /**
      * @return string
@@ -108,5 +112,33 @@ public class RegisterUser {
      */
     public void setBearer(String bearer) {
         this.bearer = bearer;
+    }
+
+    /**
+     * @return string
+     */
+    public String getRole() {
+        return role;
+    }
+
+    /**
+     * @param role the role
+     */
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    /**
+     * @return string
+     */
+    public Long getJobPosition() {
+        return jobPosition;
+    }
+
+    /**
+     * @param jobPosition the jobPosition
+     */
+    public void setRole(Long jobPosition) {
+        this.jobPosition = jobPosition;
     }
 }

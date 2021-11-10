@@ -95,3 +95,5 @@ CREATE TABLE delay(
     FOREIGN KEY (marking_id)
       REFERENCES marking(marking_id)
 );
+
+INSERT INTO CUSER(user_name, role, password, email, apikey, enabled, created_at, updated_at, deleted_at) VALUES ('admin', 'ROLE_ADMIN', '826455', 'rroca@praga.ws', 'no-apikey', 1, LOCALTIMESTAMP(6), LOCALTIMESTAMP(6), null);

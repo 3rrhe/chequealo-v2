@@ -17,10 +17,11 @@ public class Cuser {
     public static final String ROLE_SECURITY = "ROLE_SECURITY";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long userId;
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator = "Cuser_Sequence")
+    @SequenceGenerator(name = "Cuser_Sequence", sequenceName = "CUSER_SEQ")
+    private long cuserId;
 
-    @Column(name = "user_name", nullable = false)
+    @Column(name = "user_name", unique=true, nullable = false)
     private String username;
 
     @Column(name = "role", nullable = false)
@@ -59,7 +60,7 @@ public class Cuser {
      * @return the id
      */
     public long getId() {
-        return userId;
+        return cuserId;
     }
 
     /**
@@ -68,7 +69,7 @@ public class Cuser {
      * @param id the id
      */
     public void setId(long id) {
-        this.userId = id;
+        this.cuserId = id;
     }
 
     /**
@@ -250,7 +251,7 @@ public class Cuser {
     @Override
     public String toString() {
         return "Cuser{" +
-                "id=" + userId +
+                "id=" + cuserId +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", apikey='" + apikey + '\'' +

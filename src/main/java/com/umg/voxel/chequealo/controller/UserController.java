@@ -8,7 +8,7 @@ import com.umg.voxel.chequealo.utils.ApiResponse;
 import org.springframework.web.bind.annotation.*;
 import com.umg.voxel.chequealo.utils.RegisterUser;
 import com.umg.voxel.chequealo.repository.UserRepository;
-import com.umg.voxel.chequealo.repository.ProfileRepository;
+import com.umg.voxel.chequealo.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.umg.voxel.chequealo.exception.ResourceNotFoundException;
 
@@ -24,7 +24,7 @@ public class UserController {
     private UserRepository userRepository;
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private EmployeeRepository profileRepository;
 
     /**
      * Get all User list.
@@ -63,7 +63,7 @@ public class UserController {
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
             Employee employee = profileRepository
-                    .findByUser(cuser)
+                    .findByCuser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
 
             res = new ApiResponse(HttpStatus.OK.value(), "User employee", employee);
@@ -93,7 +93,7 @@ public class UserController {
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + username));
 
             Employee employee = profileRepository
-                    .findByUser(cuser)
+                    .findByCuser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + username));
 
             res = new ApiResponse(HttpStatus.OK.value(), "User employee", employee);
@@ -124,7 +124,7 @@ public class UserController {
                             .findById(userId)
                             .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
-            Employee employee = profileRepository.findByUser(cuser)
+            Employee employee = profileRepository.findByCuser(cuser)
                     .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
 
             employee.setFirstName(userDetails.getFirstName());
@@ -155,7 +155,7 @@ public class UserController {
                         .findById(userId)
                         .orElseThrow(() -> new ResourceNotFoundException("User not found on :: " + userId));
 
-        Employee employee = profileRepository.findByUser(cuser)
+        Employee employee = profileRepository.findByCuser(cuser)
                 .orElseThrow(() -> new ResourceNotFoundException("Profile not found on user :: " + userId));
 
         profileRepository.delete(employee);

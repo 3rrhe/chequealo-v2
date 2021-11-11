@@ -1,5 +1,10 @@
 HELP.md
 target/
+reports/department-employee-marking/*
+reports/employees-advance/*
+reports/employees-delay/*
+reports/general-employee-marking/*
+reports/single-employee-marking/*
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

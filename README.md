@@ -4,6 +4,13 @@ Works on Spring (a Java Framework) and MySql as database.
 
 Have an authentication in the API using JWT.
 
+The project has three different roles for users:
+* ROLE_USER
+* ROLE_ADMIN
+* ROLE_REPORTER
+
+This project can generate reports using Jasper Reports, using API endpoints to generate them, and you can find the generated .pdf files in the `/reports ` directory. 
+
 ## API Docs
 ### Auth endpoints
 #### Login
@@ -174,4 +181,50 @@ Response: `{
 }
 }`
 
-NOTE: This project has a frontend project worked in Angular (v12), you can see the code of that project **[clicking here](https://gitlab.com/umg6/chequealo-v2)**.
+### Reports endpoints
+#### Employee markings report
+URL: `/api/v1/reports/employee/{username}`\
+Method: `GET`\
+Response: `{
+"status": 200,
+"message": "Employee prueba2 markings",
+"data": "reports/single-employee-marking/prueba2_employee_marking.pdf"
+}`
+
+#### Department markings report
+URL: `/api/v1/reports/department/{departmentId}`\
+Method: `GET`\
+Response: `{
+"status": 200,
+"message": "Department IT markings",
+"data": "reports/department-employee-marking/IT_employee_marking.pdf"
+}`
+
+#### All markings report
+URL: `/api/v1/reports/markings`\
+Method: `GET`\
+Response: `{
+"status": 200,
+"message": "All markings",
+"data": "reports/general-employee-marking/general_marking.pdf"
+}`
+
+#### Employees with delays report
+URL: `/api/v1/reports/delays`\
+Method: `GET`\
+Response: `{
+"status": 200,
+"message": "All delays",
+"data": "reports/employees-delay/delay_employees_marking.pdf"
+}`
+
+#### Employees with advances report
+URL: `/api/v1/reports/advances`\
+Method: `GET`\
+Response: `{
+"status": 200,
+"message": "All advances",
+"data": "reports/employees-advance/advance_employees_marking.pdf"
+}`
+
+NOTE: This project has a frontend project developed in Angular (v12), you can see the code of that project **[clicking here](https://gitlab.com/umg6/chequealo-v2)**.

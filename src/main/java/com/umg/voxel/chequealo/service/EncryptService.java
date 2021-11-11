@@ -28,6 +28,7 @@ public class EncryptService {
 
             result = new String(tmpByte);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             result = pwd;
         }
 
@@ -53,6 +54,7 @@ public class EncryptService {
 
             result = new String(decrypted);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             result = pwd;
         }
 

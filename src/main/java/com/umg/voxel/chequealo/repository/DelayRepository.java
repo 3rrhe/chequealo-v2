@@ -10,4 +10,8 @@ import java.util.List;
 @Repository
 public interface DelayRepository extends JpaRepository<Delay, Long> {
     List<Delay> findAllByMarking(Marking marking);
+
+    List<Delay> findAllByMarkingAndType(Marking marking, String type);
+
+    List<Delay> findAllByType(String type);
 }

@@ -34,6 +34,9 @@ public class Employee {
     @Transient
     private List<Marking> markings;
 
+    @Transient
+    public int quantity = 0;
+
     /**
      * Gets id.
      *

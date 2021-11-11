@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Cuser {
     public static final String ROLE_CLIENT = "ROLE_USER";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    public static final String ROLE_SECURITY = "ROLE_SECURITY";
+    public static final String ROLE_REPORTER= "ROLE_REPORTER";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
